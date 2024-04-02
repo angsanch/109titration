@@ -6,7 +6,10 @@
 ## pH-jump
 ##
 
+import parse
+import csv
 import sys
+from collections import defaultdict
 from os import path
 
 def print_usage():
@@ -20,7 +23,7 @@ def main():
         if sys.argv[1] == "-h":
             print_usage()
         elif path.exists(sys.argv[1]):
-            pass
+            data = parse.parse_information()
         else:
             raise Exception("Invalid argument/file given.")
     else:
