@@ -49,6 +49,32 @@ def derivative(data):
         dev["pH"].append(estimation_of_derivative(data, i - 1, i, i + 1))
     return dev
 
+def points_to_line(ax, ay, bx, by):
+    m = (by - ay) / (bx - ax)
+    n = ay - (m * ax)
+    return m, n
+
+def estimate_second_derivative(dev, index):
+    stimate = {
+        "vol": [],
+        "pH": [],
+    }
+    m, n = points_to_line(dev["vol"][index - 1], dev["pH"][index - 1],
+        dev["vol"][index], dev["pH"][index])
+    for i in range(int(round(dev["vol"][index - 1] * 10, 1)),
+        int(round(dev["vol"][index] * 10, 1))):
+        stimate["vol"].append(i / 10)
+        stimate["pH"].append((i / 10) * m + n)
+    m, n = points_to_line(dev["vol"][index], dev["pH"][index],
+        dev["vol"][index + 1], dev["pH"][index + 1])
+    for i in range(int(round(dev["vol"][index] * 10, 1)),
+        int(round(dev["vol"][index + 1] * 10, 1))):
+        stimate["vol"].append(i / 10)
+        stimate["pH"].append((i / 10) * m + n)
+    stimate["vol"].append(dev["vol"][index + 1])
+    stimate["pH"].append(dev["pH"][index + 1])
+    return stimate
+
 def maths(data):
     print("Derivative:")
     dev = derivative(data)
@@ -59,6 +85,11 @@ def maths(data):
     dev = derivative(dev)
     print_vol_ph(dev["vol"], dev["pH"])
     print("Second derivative estimation:")
+    dev = estimate_second_derivative(dev, point_index - 1)
+    print_vol_ph(dev["vol"], dev["pH"])
+    dev["pH"] = [abs(i) for i in dev["pH"]]
+    print("Equivalence point at "
+        f"{dev['vol'][dev['pH'].index(min(dev['pH']))]:.1f} ml")
 
 def main():
     if len(sys.argv) == 2:
@@ -72,8 +103,9 @@ def main():
         raise Exception("Invalid amount of arguments.")
 
 if __name__ == "__main__":
+    main()
     try:
-        main()
+        pass
     except Exception as e:
         print(e, file=sys.stderr)
         exit(84)
