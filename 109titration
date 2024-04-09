@@ -38,6 +38,7 @@ def equivalence_point(dev):
     for i in range(1, len(dev["pH"]) - 1):
         if dev["pH"][i - 1] < dev["pH"][i] and dev["pH"][i] > dev["pH"][i + 1]:
             return i
+    return 0
 
 def derivative(data):
     dev = {
@@ -103,9 +104,8 @@ def main():
         raise Exception("Invalid amount of arguments.")
 
 if __name__ == "__main__":
-    main()
     try:
-        pass
+        main()
     except Exception as e:
         print(e, file=sys.stderr)
         exit(84)
