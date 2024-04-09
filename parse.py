@@ -24,6 +24,10 @@ def open_file():
 
 def parse_information():
     file_data = open_file()
+    if (min(file_data[0]) < 0):
+        raise ValueError("volume cant be negative")
+    if (min(file_data[1]) < 0):
+        raise ValueError("pH cant be negative")
     data = {
         "vol": file_data[0],
         "pH": file_data[1],
